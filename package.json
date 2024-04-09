@@ -1,20 +1,24 @@
 {
-  "name": "19_1-api-books-vercel",
+  "name": "19_2-api-books-relaciones-populate",
   "version": "1.0.0",
-  "description": "API book with Vercel",
+  "description": "API book with populate and seeds relations",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:watch": "node --watch index.js",
     "start": "node index.js",
     "seed:book": "node ./seeds/book.seeds.js",
+    "seed:author": "node ./seeds/author.seeds.js",
+    "seed:books-relations": "node ./seeds/book-relations.seed.js",
+    "seed:all": "npm run seed:author && npm run seed:book && npm run seed:books-relations",
     "prepare": "husky install",
     "lint": "eslint ."
   },
   "keywords": [
     "api",
     "book",
-    "vercel"
+    "relations",
+    "populate"
   ],
   "author": "francesc pallares",
   "license": "ISC",

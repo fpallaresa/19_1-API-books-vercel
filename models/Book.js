@@ -9,8 +9,9 @@ const bookSchema = new Schema(
       required: true,
     },
     author: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Author",
+      required: false,
     },
     pages: {
       type: Number,
@@ -19,7 +20,7 @@ const bookSchema = new Schema(
     publisher: {
       type: String,
       required: false,
-    }
+    },
   },
   {
     timestamps: true,

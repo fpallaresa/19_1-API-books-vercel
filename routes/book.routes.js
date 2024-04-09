@@ -1,5 +1,4 @@
 const express = require("express");
-const { bookSeed } = require("../seeds/book.seeds.aux.js");
 
 // Modelos
 const { Book } = require("../models/Book.js");
@@ -15,12 +14,8 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit);
     const book = await Book.find()
       .limit(limit)
-      .skip((page - 1) * limit);
-
-    // LIMIT 10, PAGE 1 -> SKIP = 0
-    // LIMIT 10, PAGE 2 -> SKIP = 10
-    // LIMIT 10, PAGE 3 -> SKIP = 20
-    // ...
+      .skip((page - 1) * limit)
+      .populate(["author"]);
 
     // Num total de elementos
     const totalElements = await Book.countDocuments();
@@ -41,13 +36,7 @@ router.get("/", async (req, res) => {
 // CRUD: CREATE - crea nuevo libro
 router.post("/", async (req, res) => {
   try {
-    const book = new Book({
-      title: req.body.title,
-      author: req.body.author,
-      pages: req.body.pages,
-      publisher: req.body.publisher,
-    });
-
+    const book = new Book(req.body);
     const createdBook = await book.save();
     return res.status(201).json(createdBook);
   } catch (error) {
@@ -67,16 +56,6 @@ router.get("/title/:title", async (req, res) => {
     } else {
       res.status(404).json([]);
     }
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-// NO CRUD - resetea valores
-router.delete("/reset", async (req, res) => {
-  try {
-    const booksCreated = await bookSeed();
-    res.json(booksCreated);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -116,7 +95,7 @@ router.put("/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const book = await Book.findById(id);
+    const book = await Book.findById(id).populate(["author"]);
     if (book) {
       res.json(book);
     } else {
